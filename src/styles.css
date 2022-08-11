@@ -1,0 +1,34 @@
+.App {
+  font-family: sans-serif;
+  text-align: center;
+}
+
+.gems {
+  display: grid;
+  grid-template-columns: repeat(5, 50px);
+  grid-template-rows: repeat(5, 50px);
+  gap: 2px;
+}
+
+.gem {
+}
+
+.gem-red {
+  background-color: red;
+}
+
+.gem-green {
+  background-color: green;
+}
+
+.gem-blue {
+  background-color: blue;
+}
+
+.gem-purple {
+  background-color: purple;
+}
+
+.gem-pink {
+  background-color: pink;
+}
