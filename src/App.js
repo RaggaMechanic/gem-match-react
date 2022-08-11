@@ -1,32 +1,6 @@
 import "./styles.css";
 
-const arr = [
-  1,
-  2,
-  4,
-  5,
-  4,
-  3,
-  3,
-  3,
-  1,
-  2,
-  4,
-  4,
-  1,
-  3,
-  4,
-  1,
-  2,
-  3,
-  2,
-  2,
-  3,
-  5,
-  5,
-  1,
-  1
-];
+const arr = Array.from({ length: 25 }, (e, i) => getNextRand(1, 5));
 
 export default function App() {
   const grid = arr.map((el, i) => {
@@ -55,4 +29,10 @@ function colorByNum(num) {
     default:
       return "gem-empty";
   }
+}
+
+function getNextRand(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 }
