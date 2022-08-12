@@ -5,7 +5,11 @@ const arr = Array.from({ length: 25 }, (e, i) => getNextRand(1, 5));
 export default function App() {
   const grid = arr.map((el, i) => {
     const gm = (
-      <span key={i} className={"gem " + colorByNum(el)}>
+      <span
+        key={i}
+        className={"gem " + colorByNum(el)}
+        onClick={(event) => clickGem(event, i, el)}
+      >
         &nbsp;
       </span>
     );
@@ -35,4 +39,14 @@ function getNextRand(min, max) {
   min = Math.ceil(min);
   max = Math.floor(max);
   return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function clickGem(event, index, gem) {
+  console.log(event, index, gem);
+  matchGems();
+}
+
+function matchGems() {
+  const gemsLines = [];
+  arr.forEach((gem, i) => {});
 }
