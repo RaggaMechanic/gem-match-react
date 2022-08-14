@@ -1,16 +1,14 @@
 .App {
-  font-family: sans-serif;
-  text-align: center;
+  font-family: consolas;
 }
 
 .gems {
   display: grid;
-  grid-template-columns: repeat(5, 50px);
-  grid-template-rows: repeat(5, 50px);
   gap: 2px;
 }
 
 .gem {
+  text-align: center;
 }
 
 .gem-red {
