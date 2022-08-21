@@ -28,7 +28,7 @@ function createGems() {
   });
 }
 
-function updateGridWithMatches(gems) {
+function clearMatches(gems) {
   const matches = matchLines(gems);
   if (matches.length > 0) {
     const newGems = Object.assign([], gems);
@@ -50,7 +50,6 @@ export default function App() {
     console.log("newGame call");
     const nGems = createGems();
     setGems(nGems);
-    setTimeout(() => updateGems(nGems), 200);
   };
 
   const dropGems = (gems) => {
@@ -66,40 +65,49 @@ export default function App() {
     });
   };
 
-  const updateGems = (gems) => {
+  const updateGems = async (gems) => {
     console.log("updateGems call", gems);
-    const { needUpdate, newGems } = updateGridWithMatches(gems);
+    const { needUpdate, newGems } = clearMatches(gems);
     if (needUpdate) {
       console.log("updateGems setGems", newGems);
+
+      await wait(100);
+      dropGems(newGems);
+      await wait(500);
+      fillGems(newGems);
+      await wait(100);
       setGems(newGems);
-      setTimeout(() => {
-        dropGems(newGems);
-        setTimeout(() => updateGems(gems), 200);
-      }, 500);
+      await wait(500);
+      await updateGems(gems);
     }
+  };
+
+  const onClick = (event, isEmpty, isSelected, el) => {
+    if (isEmpty || isSelected) return;
+
+    const _gems = Object.assign([], gems);
+    if (selected != null && swapElements(el, selected, _gems)) {
+      setSelected(null);
+      return;
+    }
+
+    setSelected(el);
+    setGems(_gems);
   };
 
   const grid = gems.map((el, i) => {
     const key = `${el.x}${el.y}`;
     const isEmpty = el.type === 0;
     const isSelected = selected === el;
-
     const className = `gem ${colorByNum(el.type)} 
       ${isSelected ? "selected" : ""}`;
 
-    const onClick = (event) => {
-      if (isEmpty) return;
-
-      if (isSelected && swapElements(el, selected)) {
-        setSelected(null);
-        return;
-      }
-
-      setSelected(el);
-    };
-
     const gm = (
-      <span key={key} className={className} onClick={onClick}>
+      <span
+        key={key}
+        className={className}
+        onClick={(e) => onClick(e, isEmpty, isSelected, el)}
+      >
         {key}
       </span>
     );
@@ -108,6 +116,7 @@ export default function App() {
 
   React.useEffect(() => {
     if (gems.length === 0) newGame();
+    setTimeout(() => updateGems(gems), 200);
   });
 
   const style = {
@@ -123,6 +132,10 @@ export default function App() {
       <button onClick={newGame}>newGame</button>
     </div>
   );
+}
+
+async function wait(time = 0) {
+  return new Promise((res) => setTimeout(res, time));
 }
 
 function colorByNum(num) {
@@ -148,13 +161,21 @@ function getNextRand(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function clickGem(event, index, gem, selectGem) {
-  // console.log(event, index, gem);
-  selectGem(gem);
-}
-
-function swapElements(el, selected) {
+function swapElements(el, selected, gems) {
   console.log(el, selected);
+
+  const difX = Math.abs(el.x - selected.x) === 1 && el.y === selected.y;
+  const difY = Math.abs(el.y - selected.y) === 1 && el.x === selected.x;
+
+  if (difX || difY) {
+    const from = gems.find((g) => g.x === selected.x && g.y === selected.y);
+    const to = gems.find((g) => g.x === el.x && g.y === el.y);
+    const old = from.type;
+    from.type = to.type;
+    el.type = old;
+    return true;
+  }
+
   return false;
 }
 
@@ -249,4 +270,12 @@ function getSwaps(gems) {
     }
   });
   return swaps;
+}
+
+function fillGems(gems) {
+  const _gems = Object.assign([], gems);
+  _gems.forEach((g) => {
+    if (g.type === 0) g.type = getNextRand(1, 5);
+  });
+  return _gems;
 }
