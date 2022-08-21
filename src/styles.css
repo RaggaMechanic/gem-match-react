@@ -9,6 +9,12 @@
 
 .gem {
   text-align: center;
+  box-sizing: border-box;
+}
+
+.gem:not(.gem-empty) {
+  cursor: pointer;
+  user-select: none;
 }
 
 .gem-red {
@@ -29,4 +35,8 @@
 
 .gem-pink {
   background-color: pink;
+}
+
+.gem.selected {
+  border: 2px solid orange;
 }

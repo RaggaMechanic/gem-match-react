@@ -44,6 +44,7 @@ function updateGridWithMatches(gems) {
 
 export default function App() {
   const [gems, setGems] = useState([]);
+  const [selected, setSelected] = useState(null);
 
   const newGame = () => {
     console.log("newGame call");
@@ -80,12 +81,25 @@ export default function App() {
 
   const grid = gems.map((el, i) => {
     const key = `${el.x}${el.y}`;
+    const isEmpty = el.type === 0;
+    const isSelected = selected === el;
+
+    const className = `gem ${colorByNum(el.type)} 
+      ${isSelected ? "selected" : ""}`;
+
+    const onClick = (event) => {
+      if (isEmpty) return;
+
+      if (isSelected && swapElements(el, selected)) {
+        setSelected(null);
+        return;
+      }
+
+      setSelected(el);
+    };
+
     const gm = (
-      <span
-        key={key}
-        className={"gem " + colorByNum(el.type)}
-        onClick={(event) => clickGem(event, i, el, () => updateGems(gems))}
-      >
+      <span key={key} className={className} onClick={onClick}>
         {key}
       </span>
     );
@@ -134,9 +148,14 @@ function getNextRand(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function clickGem(event, index, gem, updateGems) {
-  console.log(event, index, gem);
-  updateGems();
+function clickGem(event, index, gem, selectGem) {
+  // console.log(event, index, gem);
+  selectGem(gem);
+}
+
+function swapElements(el, selected) {
+  console.log(el, selected);
+  return false;
 }
 
 function separateGems(gems) {
