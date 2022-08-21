@@ -36,7 +36,7 @@ function clearMatches(gems) {
       const gem = newGems.find((g) => g.x === m.x && g.y === m.y);
       if (gem) gem.type = 0; // getNextRand(1, 5)
     });
-    return { needUpdate: true, newGems };
+    return { needUpdate: true, newGems, matches };
   }
 
   return { needUpdate: false, newGems: gems };
@@ -44,6 +44,7 @@ function clearMatches(gems) {
 
 export default function App() {
   const [gems, setGems] = useState([]);
+  const [points, setPoints] = useState(0);
   const [selected, setSelected] = useState(null);
 
   const newGame = () => {
@@ -67,7 +68,7 @@ export default function App() {
 
   const updateGems = async (gems) => {
     console.log("updateGems call", gems);
-    const { needUpdate, newGems } = clearMatches(gems);
+    const { needUpdate, newGems, matches } = clearMatches(gems);
     if (needUpdate) {
       console.log("updateGems setGems", newGems);
 
@@ -77,6 +78,11 @@ export default function App() {
       fillGems(newGems);
       await wait(100);
       setGems(newGems);
+      setPoints(
+        matches
+          .map((m) => m.length * m[0].type * 10)
+          .reduce((c, n) => c + n, points)
+      );
       await wait(500);
       await updateGems(gems);
     }
@@ -130,6 +136,7 @@ export default function App() {
         {grid}
       </div>
       <button onClick={newGame}>newGame</button>
+      <span className="points-value">{points}</span>
     </div>
   );
 }
