@@ -10,6 +10,8 @@
 .gem {
   text-align: center;
   box-sizing: border-box;
+  border-radius: 50px;
+  color: transparent;
 }
 
 .gem:not(.gem-empty) {
@@ -18,23 +20,23 @@
 }
 
 .gem-red {
-  background-color: red;
+  background-color: crimson;
 }
 
 .gem-green {
-  background-color: green;
+  background-color: lime;
 }
 
 .gem-blue {
-  background-color: blue;
+  background-color: cornflowerblue;
 }
 
 .gem-purple {
-  background-color: purple;
+  background-color: blueviolet;
 }
 
 .gem-pink {
-  background-color: pink;
+  background-color: coral;
 }
 
 .gem.selected {
